@@ -17,9 +17,45 @@ package pr_1.multithreading.task_3;
     Должна быть сохранена целостность данных.
  */
 
+import java.util.ArrayDeque;
+import java.util.Queue;
+
 public class Main {
 
+    private static final int QUEUE_MAX_SIZE = 5;
+
     public static void main(String[] args) {
-        new FileSystem().execute();
+            Queue<File> queue = new ArrayDeque();
+
+            FileSystem fs= new FileSystem(queue, QUEUE_MAX_SIZE);
+            Thread consumer = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < 100; i++) {
+                        try {
+                            fs.consume();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+            });
+
+        Thread producer = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 100; i++) {
+                    try {
+                        fs.produce();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+        producer.start();
+        consumer.start();
+        }
     }
-}
+
+

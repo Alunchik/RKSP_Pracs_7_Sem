@@ -3,82 +3,40 @@ package pr_1.multithreading.task_3;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-public class FileSystem {
+public class FileSystem{
+    FileHandler handler = new FileHandler();
 
-    private static final int QUEUE_MAX_SIZE = 5;
+    FileGenerator fileGenerator = new FileGenerator();
 
-    class FileConsumer extends Thread{
-        FileHandler handler = new FileHandler();
+    Queue<File> queue;
 
-        Queue<File> queue;
+    int maxSize;
 
-
-        public FileConsumer(Queue queue) {
-            this.queue = queue;
-        }
-
-        private void consume() throws InterruptedException {
-            synchronized (queue) {
-                while (queue.size() == 0) {
-                    System.out.println("The Queue is empty. Consumer thread needs to wait.");
-                    queue.wait();
-                }
-                handler.handle(queue.poll());
-                queue.notifyAll();
-            }
-        }
-        @Override
-        public void start(){
-            System.out.println("start");
-            for(int i=0; i<100; i++){
-                try {
-                    consume();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
+    public FileSystem(Queue queue, int maxSize) {
+        this.queue = queue;
+        this.maxSize = maxSize;
     }
 
-    class FileProducer extends Thread{
-        FileGenerator fileGenerator = new FileGenerator();
-
-        Queue<File> queue;
-
-
-        public FileProducer(Queue queue) {
-            this.queue = queue;
-        }
-
-        private void produce() throws InterruptedException {
-            synchronized (queue) {
-                while (queue.size() == QUEUE_MAX_SIZE) {
-                    System.out.println("The Queue is Full. Producer thread needs to wait.");
-                    queue.wait();
-                }
-                queue.add(fileGenerator.getFile());
-                System.out.println(queue.size());
-                queue.notifyAll();
+    public void consume() throws InterruptedException {
+        synchronized (this) {
+            while (queue.isEmpty()) {
+                System.out.println("The Queue is empty. Consumer thread needs to wait.");
+                    wait();
             }
-        }
-
-        @Override
-        public void start(){
-            for(int i=0; i<100; i++){
-                try {
-                    produce();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            handler.handle(queue.poll());
+            System.out.println("Queue size: " + queue.size());
+            notifyAll();
         }
     }
-
-    public void execute(){
-        Queue<File> queue = new ArrayDeque();
-        FileConsumer fc = new FileConsumer(queue);
-        FileProducer fp = new FileProducer(queue);
-        fp.start();
-        fc.start();
+    public void produce() throws InterruptedException {
+        synchronized (this) {
+            while (queue.size() == maxSize) {
+                System.out.println("The Queue is Full. Producer thread needs to wait.");
+                wait();
+            }
+            queue.add(fileGenerator.getFile());
+            System.out.println("Queue size: " + queue.size());
+            notifyAll();
+        }
     }
 }
