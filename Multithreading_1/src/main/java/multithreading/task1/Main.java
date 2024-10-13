@@ -48,7 +48,7 @@ class FindMax {
         Random random = new Random();
         int[] arr = new int[10000];
         for (int i = 0; i < arr.length; i++) {
-            arr[i] = random.nextInt(1, 100);
+            arr[i] = random.nextInt(100);
         }
         return arr;
     }
@@ -77,8 +77,8 @@ class FindMax {
     int findMaxParallel() {
         int[] arr = getArray();
         int startIndex = 0;
-        int endIndex = 9;
-        int step = 10;
+        int endIndex = 90;
+        int step = 90;
         //делим массим на кусочки, по каждому из которых пройдется один поток
         //Потоки делают запись в общий ресурс - переменную max
         for (int i = endIndex + step; i < arr.length; i += step) {

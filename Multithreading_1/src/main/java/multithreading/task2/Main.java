@@ -22,7 +22,7 @@ public class Main {
 
     static int getDelay(){
         Random random = new Random();
-        return random.nextInt(1, 5) * 1000;
+        return random.nextInt( 5) * 1000;
     }
 
     static int getSquare(int a){

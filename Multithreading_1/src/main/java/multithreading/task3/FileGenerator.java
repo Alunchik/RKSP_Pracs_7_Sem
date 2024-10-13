@@ -11,8 +11,8 @@ public class FileGenerator {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        String format = formats[random.nextInt(0, formats.length)];
-        int size = random.nextInt(10, 100);
+        String format = formats[random.nextInt(formats.length)];
+        int size = random.nextInt(100);
         System.out.println("Generated " + format + " " + size + "MB");
         return new File(format, size);
     }

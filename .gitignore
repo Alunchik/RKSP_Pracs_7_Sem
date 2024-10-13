@@ -14,7 +14,8 @@ out/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
-
+**/target
+**/resources
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -29,3 +30,6 @@ bin/
 .DS_Store
 *.iml
 .idea
+/target/
+/META-INF/
+/archetype-resources/

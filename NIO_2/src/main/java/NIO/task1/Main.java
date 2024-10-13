@@ -9,7 +9,7 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException {
-        String path = "src/pr_2/NIO/task_1/file.txt";
+        String path = "NIO_2\\src\\main\\resources\\file1.txt";
         RandomAccessFile file = new RandomAccessFile(path, "rw");
 
         FileChannel fileChannel = file.getChannel();
